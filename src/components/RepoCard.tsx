@@ -33,12 +33,13 @@ const repoIsSaved = (repoId: string) => {
 };
 
 const RepoCard: Component<Props> = ({ repo }) => {
+  console.log(repo);
   return (
     <div class='card'>
       <div class='card-header'>&#11088; stars: {repo.stargazers_count}</div>
       <div class='card-body'>
         <a
-          href='repo.html_url'
+          href={repo.html_url}
           class='h4 card-title text-decoration-none'
           target='_blank'
           rel='noreferrer'
