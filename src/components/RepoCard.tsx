@@ -1,4 +1,5 @@
 import { Component } from 'solid-js';
+import { savedRepos, setSevedRepos } from '../pages/SavedRepos';
 
 export type Repo = {
   id: string;
@@ -14,6 +15,23 @@ export type Repo = {
 interface Props {
   repo: Repo;
 }
+
+const saveRepo = (repo: Repo) => {
+  setSevedRepos([repo, ...savedRepos()]);
+  localStorage.setItem('savedRepos', JSON.stringify(savedRepos()));
+};
+
+const unsaveRepo = (repoId: string) => {
+  const nextState = savedRepos()?.filter((item) => item.id !== repoId);
+  setSevedRepos(nextState);
+  localStorage.setItem('savedRepos', JSON.stringify(savedRepos()));
+};
+
+const repoIsSaved = (repoId: string) => {
+  const repo = savedRepos()?.filter((item) => item.id === repoId);
+  return repo?.length > 0;
+};
+
 const RepoCard: Component<Props> = ({ repo }) => {
   return (
     <div class='card'>
@@ -30,7 +48,15 @@ const RepoCard: Component<Props> = ({ repo }) => {
           </strong>
         </a>
         <p class='card-text'>{repo.description}</p>
-        <button class='btn btn-success'>Save</button>
+        {repoIsSaved(repo.id) ? (
+          <button class='btn btn-danger' onClick={() => unsaveRepo(repo.id)}>
+            Unsave
+          </button>
+        ) : (
+          <button class='btn btn-success' onClick={() => saveRepo(repo)}>
+            Save
+          </button>
+        )}
       </div>
     </div>
   );
